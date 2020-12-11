@@ -1,0 +1,123 @@
+// A class library for making a consistent border in a html element.
+
+
+
+// development:
+// @use "node_modules/@heymarco/colors/index" as col;
+
+// production:
+@use "../../../node_modules/@heymarco/colors/index" as col;
+
+
+
+$class                          : ".bd"     !default;
+$var-root                       : ":root"   !default;
+$var-prefix                     : "bd"      !default;
+$cssvar: "";
+@if (($var-prefix == null) or ($var-prefix == "")) {
+    $cssvar: "--";
+} @else {
+    $cssvar: "--#{$var-prefix}-";
+}
+
+$color      : var(#{col.$cssvar}dark-transp)    !default;
+$style      : solid                             !default;
+
+$default    : var(#{$cssvar}hairline)           !default;
+$none       : 0px                               !default;
+$hairline   : 1px                               !default;
+$thin       : 2px                               !default;
+$bold       : 4px                               !default;
+
+
+
+@if ($var-root) { #{$var-root} {
+    #{$cssvar}color                 : #{$color};
+    #{$cssvar}style                 : #{$style};
+
+    #{str-slice($cssvar, 1, -2)}    : #{$default};
+    #{$cssvar}default               : #{$default};
+    #{$cssvar}none                  : #{$none};
+    #{$cssvar}hairline              : #{$hairline};
+    #{$cssvar}thin                  : #{$thin};
+    #{$cssvar}bold                  : #{$bold};
+}}
+
+
+
+@function _is-named($stroke) {
+    @if ($stroke == default) { @return true; }
+    @if ($stroke == none) { @return true; }
+    @if ($stroke == hairline) { @return true; }
+    @if ($stroke == thin) { @return true; }
+    @if ($stroke == bold) { @return true; }
+    @return false;
+}
+@function _value($stroke) {
+    @if (_is-named($stroke)) {
+        @return var(#{$cssvar}#{$stroke});
+    }
+    @else {
+        @return $stroke;
+    }
+}
+
+@mixin all($stroke: default) {
+    border          : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin top($stroke: default) {
+    border-top      : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin bottom($stroke: default) {
+    border-bottom   : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin left($stroke: default) {
+    border-left     : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin right($stroke: default) {
+    border-right    : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+
+@mixin not-top($stroke: default) {
+    @include bottom;
+    @include left;
+    @include right;
+}
+@mixin not-bottom($stroke: default) {
+    @include top;
+    @include left;
+    @include right;
+}
+@mixin not-left($stroke: default) {
+    @include top;
+    @include bottom;
+    @include right;
+}
+@mixin not-right($stroke: default) {
+    @include top;
+    @include bottom;
+    @include left;
+}
+
+
+
+@mixin style {
+    @include all;
+    &-all { @include all; }
+
+    &-top { @include top; }
+    &-bottom { @include bottom; }
+    &-left { @include left; }
+    &-right { @include right; }
+
+    &-not-top { @include not-top; }
+    &-not-bottom { @include not-bottom; }
+    &-not-left { @include not-left; }
+    &-not-right { @include not-right; }
+
+
+    &-none { @include all(none); }
+}
+@if ($class) {
+    #{$class} { @include style; }
+}

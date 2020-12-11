@@ -1,0 +1,112 @@
+// A class library for making a consistent radius in a html element.
+
+
+
+$class                          : ".bd"         !default;
+$var-root                       : ":root"       !default;
+$var-prefix                     : "bd-radius"   !default;
+$cssvar: "";
+@if (($var-prefix == null) or ($var-prefix == "")) {
+    $cssvar: "--";
+} @else {
+    $cssvar: "--#{$var-prefix}-";
+}
+
+$default    : var(#{$cssvar}normal) !default;
+$none       : 0px                   !default;
+$small      : 0.2rem                !default;
+$normal     : 0.25rem               !default;
+$large      : 0.3rem                !default;
+$pill       : 50rem                 !default;
+$circle     : 50%                   !default;
+
+
+
+@if ($var-root) { #{$var-root} {
+    #{str-slice($cssvar, 1, -2)}    : #{$default};
+    #{$cssvar}default               : #{$default};
+    #{$cssvar}none                  : #{$none};
+    #{$cssvar}small                 : #{$small};
+    #{$cssvar}normal                : #{$normal};
+    #{$cssvar}large                 : #{$large};
+    #{$cssvar}pill                  : #{$pill};
+    #{$cssvar}circle                : #{$circle};
+}}
+
+
+
+@function _is-named($radius) {
+    @if ($radius == default) { @return true; }
+    @if ($radius == none) { @return true; }
+    @if ($radius == small) { @return true; }
+    @if ($radius == normal) { @return true; }
+    @if ($radius == large) { @return true; }
+    @if ($radius == pill) { @return true; }
+    @if ($radius == circle) { @return true; }
+    @return false;
+}
+@function _value($radius) {
+    @if (_is-named($radius)) {
+        @return var(#{$cssvar}#{$radius});
+    }
+    @else {
+        @return $radius;
+    }
+}
+
+
+@mixin all($radius: default) {
+    border-radius               : _value($radius);
+}
+@mixin top($radius: default) {
+    border-top-left-radius      : _value($radius);
+    border-top-right-radius     : _value($radius);
+}
+@mixin bottom($radius: default) {
+    border-bottom-left-radius   : _value($radius);
+    border-bottom-right-radius  : _value($radius);
+}
+@mixin left($radius: default) {
+    border-top-left-radius      : _value($radius);
+    border-bottom-left-radius   : _value($radius);
+}
+@mixin right($radius: default) {
+    border-top-right-radius     : _value($radius);
+    border-bottom-right-radius  : _value($radius);
+}
+
+@mixin top-left($radius: default) {
+    border-top-left-radius      : _value($radius);
+}
+@mixin top-right($radius: default) {
+    border-top-right-radius     : _value($radius);
+}
+
+@mixin bottom-left($radius: default) {
+    border-bottom-left-radius   : _value($radius);
+}
+@mixin bottom-right($radius: default) {
+    border-bottom-right-radius  : _value($radius);
+}
+
+
+
+@mixin style {
+    @include all;
+    &-all { @include all; }
+
+    &-top { @include top; }
+    &-bottom { @include bottom; }
+    &-left { @include left; }
+    &-right { @include right; }
+
+    
+    &-none { @include all(none); }
+    &-small { @include all(small); }
+    &-large { @include all(large); }
+    &-pill { @include all(pill); }
+    &-circle { @include all(circle); }
+}
+@if ($class) {
+    #{$class} { @include style; }
+}

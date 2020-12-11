@@ -1,0 +1,31 @@
+{
+  "name": "@heymarco/border",
+  "version": "1.0.0",
+  "description": "A utility for styling the border and border radius of an HTML element.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heyymarco/border.git"
+  },
+  "keywords": [
+    "border",
+    "border",
+    "radius",
+    "radius",
+    "html",
+    "element",
+    "css",
+    "style"
+  ],
+  "author": "HeyMarco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heyymarco/border/issues"
+  },
+  "homepage": "https://github.com/heyymarco/border#readme",
+  "dependencies": {
+    "@heymarco/colors": "^1.0.8"
+  }
+}
