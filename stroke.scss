@@ -3,121 +3,175 @@
 
 
 // development:
-// @use "node_modules/@heymarco/colors/index" as col;
+@use "node_modules/@heymarco/sass-class-template/index" as *;
+@use "node_modules/@heymarco/colors/index" as col;
 
 // production:
-@use "../../../node_modules/@heymarco/colors/index" as col;
+// @use "../../../node_modules/@heymarco/sass-class-template/index" as *;
+// @use "../../../node_modules/@heymarco/colors/index" as col;
 
 
 
-$class                          : ".bd"     !default;
-$var-root                       : ":root"   !default;
-$var-prefix                     : "bd"      !default;
-$cssvar: "";
-@if (($var-prefix == null) or ($var-prefix == "")) {
-    $cssvar: "--";
-} @else {
-    $cssvar: "--#{$var-prefix}-";
+@use    "base"         as base;
+
+
+
+@use    "sass:list"    as list;
+@use    "sass:map"     as map;
+
+
+
+$alias              : "%border-stroke"                      !default;
+/*sub*/$class       : ""                                    !default;
+$var-root           : base.$var-root                        !default;
+$var-prefix         : ""                                    !default;
+$var-prefix-base    : base.$var-prefix                      !default;
+$cssvar: make-cssvar($var-prefix, $var-prefix-base);
+
+$color      : var(#{col.$cssvar}dark-transp)                !default;
+$style      : solid                                         !default;
+
+$default    : var(#{$cssvar}hair)                           !default;
+$none       : 0px                                           !default;
+$hair       : 1px                                           !default;
+$thin       : 2px                                           !default;
+$bold       : 4px                                           !default;
+
+$sizes      : ()                                            !default;
+$sizes: map.merge((
+    default : $default,
+    none    : $none,
+    hair    : $hair,
+    thin    : $thin,
+    bold    : $bold
+), $sizes);
+
+
+
+@include declare-cssvar($var-root) {
+    #{$cssvar}color                     : #{$color};
+    #{$cssvar}style                     : #{$style};
+
+    @if (map.has-key($sizes, default)) {
+        #{str-slice($cssvar, 1, -2)}    : var(#{$cssvar}default);
+    }
+    @each $name, $value in $sizes {
+        #{$cssvar}#{$name} : #{$value};
+    }
 }
 
-$color      : var(#{col.$cssvar}dark-transp)    !default;
-$style      : solid                             !default;
-
-$default    : var(#{$cssvar}hairline)           !default;
-$none       : 0px                               !default;
-$hairline   : 1px                               !default;
-$thin       : 2px                               !default;
-$bold       : 4px                               !default;
 
 
-
-@if ($var-root) { #{$var-root} {
-    #{$cssvar}color                 : #{$color};
-    #{$cssvar}style                 : #{$style};
-
-    #{str-slice($cssvar, 1, -2)}    : #{$default};
-    #{$cssvar}default               : #{$default};
-    #{$cssvar}none                  : #{$none};
-    #{$cssvar}hairline              : #{$hairline};
-    #{$cssvar}thin                  : #{$thin};
-    #{$cssvar}bold                  : #{$bold};
-}}
-
-
-
-@function _is-named($stroke) {
-    @if ($stroke == default) { @return true; }
-    @if ($stroke == none) { @return true; }
-    @if ($stroke == hairline) { @return true; }
-    @if ($stroke == thin) { @return true; }
-    @if ($stroke == bold) { @return true; }
-    @return false;
+@function _is-named($size) {
+    @return map.has-key($sizes, $size);
 }
-@function _value($stroke) {
-    @if (_is-named($stroke)) {
-        @return var(#{$cssvar}#{$stroke});
+@function _value($size) {
+    @if (_is-named($size)) {
+        @return var(#{$cssvar}#{$size});
     }
     @else {
-        @return $stroke;
+        @return $size;
     }
 }
 
-@mixin all($stroke: default) {
-    border          : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
-}
-@mixin top($stroke: default) {
-    border-top      : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
-}
-@mixin bottom($stroke: default) {
-    border-bottom   : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
-}
-@mixin left($stroke: default) {
-    border-left     : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
-}
-@mixin right($stroke: default) {
-    border-right    : _value($stroke) var(#{$cssvar}style) var(#{$cssvar}color);
-}
-
-@mixin not-top($stroke: default) {
-    @include bottom;
-    @include left;
-    @include right;
-}
-@mixin not-bottom($stroke: default) {
-    @include top;
-    @include left;
-    @include right;
-}
-@mixin not-left($stroke: default) {
-    @include top;
-    @include bottom;
-    @include right;
-}
-@mixin not-right($stroke: default) {
-    @include top;
-    @include bottom;
-    @include left;
-}
 
 
+/* begin: public mixins */
+@mixin all($size: default) {
+    border          : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin top($size: default) {
+    border-top      : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin bottom($size: default) {
+    border-bottom   : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin left($size: default) {
+    border-left     : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+}
+@mixin right($size: default) {
+    border-right    : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+}
 
+@mixin not-top($size: default) {
+    @include bottom($size);
+    @include left($size);
+    @include right($size);
+}
+@mixin not-bottom($size: default) {
+    @include top($size);
+    @include left($size);
+    @include right($size);
+}
+@mixin not-left($size: default) {
+    @include top($size);
+    @include bottom($size);
+    @include right($size);
+}
+@mixin not-right($size: default) {
+    @include top($size);
+    @include bottom($size);
+    @include left($size);
+}
+
+@mixin none {
+    @include all(none);
+}
+/* end: public mixins */
+
+
+
+/* begin: division class */
+$locations: (all, top, bottom, left, right, not-top, not-bottom, not-left, not-right, none);
+@mixin _at($location) {
+    @if (not list.index($location, $locations) == 0) { @error "#{$location} is not valid."; }
+    
+
+
+    @if      ($location == all)         { @include all; }
+
+    @else if ($location == top)         { @include top; }
+    @else if ($location == bottom)      { @include bottom; }
+    @else if ($location == left)        { @include left; }
+    @else if ($location == right)       { @include right; }
+
+    @else if ($location == not-top)     { @include not-top; }
+    @else if ($location == not-bottom)  { @include not-bottom; }
+    @else if ($location == not-left)    { @include not-left; }
+    @else if ($location == not-right)   { @include not-right; }
+
+    @else if ($location == none)        { @include none; }
+}
+@mixin at($location) {
+    @include _at($location);
+}
+@each $sub in $locations {
+    @include alias-of($alias, $sub) {
+        @include _at($sub);
+    }
+
+
+    // utility class => no emit class
+    // @include class(part-combine($alias, $sub), "#{$class}-#{$sub}", base.$class);
+}
+/* end: division class */
+
+
+
+/* begin: general style */
+@mixin _style($include) {
+    @if ($include) { @include all; }
+    @else          { @extend #{$alias}-all !optional; }
+}
 @mixin style {
-    @include all;
-    &-all { @include all; }
-
-    &-top { @include top; }
-    &-bottom { @include bottom; }
-    &-left { @include left; }
-    &-right { @include right; }
-
-    &-not-top { @include not-top; }
-    &-not-bottom { @include not-bottom; }
-    &-not-left { @include not-left; }
-    &-not-right { @include not-right; }
-
-
-    &-none { @include all(none); }
+    @include _style(true);
 }
-@if ($class) {
-    #{$class} { @include style; }
+@include alias($alias) {
+    @include _style(false);
 }
+/* end: general style */
+
+
+
+// utility class => no emit class
+// @include class($alias, $class, base.$class);

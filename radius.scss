@@ -2,111 +2,168 @@
 
 
 
-$class                          : ".bd"         !default;
-$var-root                       : ":root"       !default;
-$var-prefix                     : "bd-radius"   !default;
-$cssvar: "";
-@if (($var-prefix == null) or ($var-prefix == "")) {
-    $cssvar: "--";
-} @else {
-    $cssvar: "--#{$var-prefix}-";
+// development:
+@use "node_modules/@heymarco/sass-class-template/index" as *;
+
+// production:
+// @use "../../../node_modules/@heymarco/sass-class-template/index" as *;
+
+
+
+@use    "base"         as base;
+
+
+
+@use    "sass:list"    as list;
+@use    "sass:map"     as map;
+
+
+
+$alias              : "%border-radius"                      !default;
+/*sub*/$class       : "-radius"                             !default;
+$var-root           : base.$var-root                        !default;
+$var-prefix         : "radius"                              !default;
+$var-prefix-base    : base.$var-prefix                      !default;
+$cssvar: make-cssvar($var-prefix, $var-prefix-base);
+
+$default    : var(#{$cssvar}md)                             !default;
+$none       : 0px                                           !default;
+$sm         : 0.2rem                                        !default;
+$md         : 0.25rem                                       !default;
+$lg         : 0.3rem                                        !default;
+$pill       : 50rem                                         !default;
+$circle     : 50%                                           !default;
+
+$sizes      : ()                                            !default;
+$sizes: map.merge((
+    default : $default,
+    none    : $none,
+    sm      : $sm,
+    md      : $md,
+    lg      : $lg,
+    pill    : $pill,
+    circle  : $circle
+), $sizes);
+
+
+
+@include declare-cssvar($var-root) {
+    @if (map.has-key($sizes, default)) {
+        #{str-slice($cssvar, 1, -2)}    : var(#{$cssvar}default);
+    }
+    @each $name, $value in $sizes {
+        #{$cssvar}#{$name} : #{$value};
+    }
 }
 
-$default    : var(#{$cssvar}normal) !default;
-$none       : 0px                   !default;
-$small      : 0.2rem                !default;
-$normal     : 0.25rem               !default;
-$large      : 0.3rem                !default;
-$pill       : 50rem                 !default;
-$circle     : 50%                   !default;
 
 
-
-@if ($var-root) { #{$var-root} {
-    #{str-slice($cssvar, 1, -2)}    : #{$default};
-    #{$cssvar}default               : #{$default};
-    #{$cssvar}none                  : #{$none};
-    #{$cssvar}small                 : #{$small};
-    #{$cssvar}normal                : #{$normal};
-    #{$cssvar}large                 : #{$large};
-    #{$cssvar}pill                  : #{$pill};
-    #{$cssvar}circle                : #{$circle};
-}}
-
-
-
-@function _is-named($radius) {
-    @if ($radius == default) { @return true; }
-    @if ($radius == none) { @return true; }
-    @if ($radius == small) { @return true; }
-    @if ($radius == normal) { @return true; }
-    @if ($radius == large) { @return true; }
-    @if ($radius == pill) { @return true; }
-    @if ($radius == circle) { @return true; }
-    @return false;
+@function _is-named($size) {
+    @return map.has-key($sizes, $size);
 }
-@function _value($radius) {
-    @if (_is-named($radius)) {
-        @return var(#{$cssvar}#{$radius});
+@function _value($size) {
+    @if (_is-named($size)) {
+        @return var(#{$cssvar}#{$size});
     }
     @else {
-        @return $radius;
+        @return $size;
     }
 }
 
 
-@mixin all($radius: default) {
-    border-radius               : _value($radius);
+
+/* begin: public mixins */
+@mixin all($size: default) {
+    border-radius               : _value($size);
 }
-@mixin top($radius: default) {
-    border-top-left-radius      : _value($radius);
-    border-top-right-radius     : _value($radius);
+@mixin top($size: default) {
+    border-top-left-radius      : _value($size);
+    border-top-right-radius     : _value($size);
 }
-@mixin bottom($radius: default) {
-    border-bottom-left-radius   : _value($radius);
-    border-bottom-right-radius  : _value($radius);
+@mixin bottom($size: default) {
+    border-bottom-left-radius   : _value($size);
+    border-bottom-right-radius  : _value($size);
 }
-@mixin left($radius: default) {
-    border-top-left-radius      : _value($radius);
-    border-bottom-left-radius   : _value($radius);
+@mixin left($size: default) {
+    border-top-left-radius      : _value($size);
+    border-bottom-left-radius   : _value($size);
 }
-@mixin right($radius: default) {
-    border-top-right-radius     : _value($radius);
-    border-bottom-right-radius  : _value($radius);
+@mixin right($size: default) {
+    border-top-right-radius     : _value($size);
+    border-bottom-right-radius  : _value($size);
 }
 
-@mixin top-left($radius: default) {
-    border-top-left-radius      : _value($radius);
+@mixin top-left($size: default) {
+    border-top-left-radius      : _value($size);
 }
-@mixin top-right($radius: default) {
-    border-top-right-radius     : _value($radius);
-}
-
-@mixin bottom-left($radius: default) {
-    border-bottom-left-radius   : _value($radius);
-}
-@mixin bottom-right($radius: default) {
-    border-bottom-right-radius  : _value($radius);
+@mixin top-right($size: default) {
+    border-top-right-radius     : _value($size);
 }
 
+@mixin bottom-left($size: default) {
+    border-bottom-left-radius   : _value($size);
+}
+@mixin bottom-right($size: default) {
+    border-bottom-right-radius  : _value($size);
+}
+
+@mixin none {
+    @include all(none);
+}
+/* end: public mixins */
 
 
-@mixin style {
-    @include all;
-    &-all { @include all; }
-
-    &-top { @include top; }
-    &-bottom { @include bottom; }
-    &-left { @include left; }
-    &-right { @include right; }
-
+/* begin: division class */
+$locations: (all, top, bottom, left, right, top-left, top-right, bottom-left, bottom-right, none);
+@mixin _at($location) {
+    @if (not list.index($location, $locations) == 0) { @error "#{$location} is not valid."; }
     
-    &-none { @include all(none); }
-    &-small { @include all(small); }
-    &-large { @include all(large); }
-    &-pill { @include all(pill); }
-    &-circle { @include all(circle); }
+
+
+    @if      ($location == all)         { @include all; }
+
+    @else if ($location == top)         { @include top; }
+    @else if ($location == bottom)      { @include bottom; }
+    @else if ($location == left)        { @include left; }
+    @else if ($location == right)       { @include right; }
+
+    @else if ($location == top-left)     { @include top-left; }
+    @else if ($location == top-right)  { @include top-right; }
+    @else if ($location == bottom-left)    { @include bottom-left; }
+    @else if ($location == bottom-right)   { @include bottom-right; }
+
+    @else if ($location == none)        { @include none; }
 }
-@if ($class) {
-    #{$class} { @include style; }
+@mixin at($location) {
+    @include _at($location);
 }
+@each $sub in $locations {
+    @include alias-of($alias, $sub) {
+        @include _at($sub);
+    }
+
+
+    // utility class => no emit class
+    // @include class(part-combine($alias, $sub), "#{$class}-#{$sub}", base.$class);
+}
+/* end: division class */
+
+
+
+/* begin: general style */
+@mixin _style($include) {
+    @if ($include) { @include all; }
+    @else          { @extend #{$alias}-all !optional; }
+}
+@mixin style {
+    @include _style(true);
+}
+@include alias($alias) {
+    @include _style(false);
+}
+/* end: general style */
+
+
+
+// utility class => no emit class
+// @include class($alias, $class, base.$class);
