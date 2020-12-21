@@ -4,11 +4,11 @@
 
 // development:
 // @use "node_modules/@heymarco/sass-class-template/index" as *;
-// @use "node_modules/@heymarco/colors/index" as col;
+// @use "node_modules/@heymarco/colors/index" as color;
 
 // production:
 @use "../../../node_modules/@heymarco/sass-class-template/index" as *;
-@use "../../../node_modules/@heymarco/colors/index" as col;
+@use "../../../node_modules/@heymarco/colors/index" as color;
 
 
 
@@ -29,7 +29,7 @@ $var-prefix         : ""                                    !default;
 $var-prefix-base    : base.$var-prefix                      !default;
 $cssvar: make-cssvar($var-prefix, $var-prefix-base);
 
-$color      : var(#{col.$cssvar}dark-transp)                !default;
+$color      : var(#{color.$cssvar}dark-transp)              !default;
 $style      : solid                                         !default;
 
 $default    : var(#{$cssvar}hair)                           !default;
@@ -124,7 +124,7 @@ $sizes: map.merge((
 
 /* begin: division class */
 $locations: (all, top, bottom, left, right, not-top, not-bottom, not-left, not-right, none);
-@mixin _at($location) {
+@mixin _style-of($location, $include) {
     @if (list.index($locations, $location) == null) { @error "#{$location} is not valid."; }
     
 
@@ -143,12 +143,12 @@ $locations: (all, top, bottom, left, right, not-top, not-bottom, not-left, not-r
 
     @else if ($location == none)        { @include none; }
 }
-@mixin at($location) {
-    @include _at($location);
+@mixin style-of($location) {
+    @include _style-of($location, true);
 }
 @each $sub in $locations {
     @include alias-of($alias, $sub) {
-        @include _at($sub);
+        @include _style-of($sub, false);
     }
 
 
@@ -161,6 +161,10 @@ $locations: (all, top, bottom, left, right, not-top, not-bottom, not-left, not-r
 
 /* begin: general style */
 @mixin _style($include) {
+    @if ($include) { @include base.style; }
+    @else          { @extend #{base.$alias} !optional; }
+
+
     @if ($include) { @include all; }
     @else          { @extend #{$alias}-all !optional; }
 }
