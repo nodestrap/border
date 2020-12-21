@@ -3,12 +3,12 @@
 
 
 // development:
-@use "node_modules/@heymarco/sass-class-template/index" as *;
-@use "node_modules/@heymarco/colors/index" as col;
+// @use "node_modules/@heymarco/sass-class-template/index" as *;
+// @use "node_modules/@heymarco/colors/index" as col;
 
 // production:
-// @use "../../../node_modules/@heymarco/sass-class-template/index" as *;
-// @use "../../../node_modules/@heymarco/colors/index" as col;
+@use "../../../node_modules/@heymarco/sass-class-template/index" as *;
+@use "../../../node_modules/@heymarco/colors/index" as col;
 
 
 
