@@ -1,6 +1,6 @@
 {
   "name": "@heymarco/border",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A utility for styling the border and border radius of an HTML element.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

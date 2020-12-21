@@ -14,6 +14,7 @@
 
 
 
+@use    "sass:string"  as string;
 @use    "sass:list"    as list;
 @use    "sass:map"     as map;
 
@@ -49,7 +50,7 @@ $sizes: map.merge((
 
 @include declare-cssvar($var-root) {
     @if (map.has-key($sizes, default)) {
-        #{str-slice($cssvar, 1, -2)}    : var(#{$cssvar}default);
+        #{string.slice($cssvar, 1, -2)} : var(#{$cssvar}default);
     }
     @each $name, $value in $sizes {
         #{$cssvar}#{$name} : #{$value};
