@@ -116,23 +116,23 @@ $sizes: map.merge((
 /* begin: division class */
 $locations: (all, top, bottom, left, right, top-left, top-right, bottom-left, bottom-right, none);
 @mixin _at($location) {
-    @if (not list.index($location, $locations) == 0) { @error "#{$location} is not valid."; }
+    @if (list.index($locations, $location) == null) { @error "#{$location} is not valid."; }
     
 
 
-    @if      ($location == all)         { @include all; }
+    @if      ($location == all)             { @include all; }
 
-    @else if ($location == top)         { @include top; }
-    @else if ($location == bottom)      { @include bottom; }
-    @else if ($location == left)        { @include left; }
-    @else if ($location == right)       { @include right; }
+    @else if ($location == top)             { @include top; }
+    @else if ($location == bottom)          { @include bottom; }
+    @else if ($location == left)            { @include left; }
+    @else if ($location == right)           { @include right; }
 
-    @else if ($location == top-left)     { @include top-left; }
-    @else if ($location == top-right)  { @include top-right; }
-    @else if ($location == bottom-left)    { @include bottom-left; }
-    @else if ($location == bottom-right)   { @include bottom-right; }
+    @else if ($location == top-left)        { @include top-left; }
+    @else if ($location == top-right)       { @include top-right; }
+    @else if ($location == bottom-left)     { @include bottom-left; }
+    @else if ($location == bottom-right)    { @include bottom-right; }
 
-    @else if ($location == none)        { @include none; }
+    @else if ($location == none)            { @include none; }
 }
 @mixin at($location) {
     @include _at($location);

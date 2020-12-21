@@ -124,7 +124,7 @@ $sizes: map.merge((
 /* begin: division class */
 $locations: (all, top, bottom, left, right, not-top, not-bottom, not-left, not-right, none);
 @mixin _at($location) {
-    @if (not list.index($location, $locations) == 0) { @error "#{$location} is not valid."; }
+    @if (list.index($locations, $location) == null) { @error "#{$location} is not valid."; }
     
 
 
