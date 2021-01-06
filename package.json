@@ -1,6 +1,6 @@
 {
   "name": "@heymarco/border",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A utility for styling the border and border radius of an HTML element.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/heyymarco/border#readme",
   "dependencies": {
-    "@heymarco/colors": "^1.0.10",
+    "@heymarco/colors": "^1.0.15",
     "@heymarco/sass-class-template": "^1.0.6"
   }
 }
