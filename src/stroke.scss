@@ -2,13 +2,8 @@
 
 
 
-// development:
-// @use "node_modules/@heymarco/sass-class-template/index" as *;
-// @use "node_modules/@heymarco/colors/index" as color;
-
-// production:
-@use "../../../node_modules/@heymarco/sass-class-template/index" as *;
-@use "../../../node_modules/@heymarco/colors/index" as color;
+@use "@heymarco/sass-class-template/src/index" as *;
+@use "@heymarco/colors/src/index"              as color;
 
 
 
