@@ -1,37 +1,34 @@
 {
-  "name": "@heymarco/border",
+  "name": "@nodestrap/border",
   "version": "2.0.0",
   "description": "A utility for styling the border and border radius of an HTML element.",
+  "dependencies": {
+    "@nodestrap/colors": "^2.0.1",
+    "@nodestrap/sass-class-template": "^2.0.2"
+  },
+  "devDependencies": {
+    "tilde-sass": "^1.0.0"
+  },
   "scripts": {
-    "test": "sass --load-path=node_modules test.scss:test.css --no-source-map",
-    "watch": "sass --load-path=node_modules src:dist --style compressed --watch",
-    "build": "sass --load-path=node_modules src:dist --style compressed"
+    "test": "tilde-sass --file test/*.scss --outFile test/",
+    "compile": "tilde-sass --file src/*.scss --outFile dist/ --outputStyle compressed"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heyymarco/border.git"
+    "url": "git+https://github.com/nodestrap/border.git"
   },
   "keywords": [
     "border",
-    "border",
-    "radius",
     "radius",
     "html",
     "element",
     "css",
     "style"
   ],
-  "author": "HeyMarco",
+  "author": "nodestrap, heymarco",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/heyymarco/border/issues"
+    "url": "https://github.com/nodestrap/border/issues"
   },
-  "homepage": "https://github.com/heyymarco/border#readme",
-  "dependencies": {
-    "@heymarco/colors": "^2.0.0",
-    "@heymarco/sass-class-template": "^2.0.0"
-  },
-  "devDependencies": {
-    "sass": "^1.32.4"
-  }
+  "homepage": "https://github.com/nodestrap/border#readme"
 }
