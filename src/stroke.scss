@@ -17,17 +17,16 @@
 
 
 
-$alias              : "%border-stroke"                      !default;
 /*sub*/$class       : ""                                    !default;
 $var-root           : base.$var-root                        !default;
 $var-prefix         : ""                                    !default;
 $var-prefix-base    : base.$var-prefix                      !default;
-$cssvar: make-cssvar($var-prefix, $var-prefix-base);
+$var: make-var($var-prefix, $var-prefix-base);
 
-$color      : var(#{color.$cssvar}dark-transp)              !default;
+$color      : var(#{color.$var}dark-transp)                 !default;
 $style      : solid                                         !default;
 
-$default    : var(#{$cssvar}hair)                           !default;
+$default    : var(#{$var}hair)                              !default;
 $none       : 0px                                           !default;
 $hair       : 1px                                           !default;
 $thin       : 2px                                           !default;
@@ -44,15 +43,15 @@ $sizes: map.merge((
 
 
 
-@include declare-cssvar($var-root) {
-    #{$cssvar}color                     : #{$color};
-    #{$cssvar}style                     : #{$style};
+@include declare-vars($var-root) {
+    #{$var}color                        : #{$color};
+    #{$var}style                        : #{$style};
 
     @if (map.has-key($sizes, default)) {
-        #{string.slice($cssvar, 1, -2)} : var(#{$cssvar}default);
+        #{string.slice($var, 1, -2)}    : var(#{$var}default) var(#{$var}style) var(#{$var}color);
     }
     @each $name, $value in $sizes {
-        #{$cssvar}#{$name} : #{$value};
+        #{$var}#{$name}                 : #{$value};
     }
 }
 
@@ -63,7 +62,7 @@ $sizes: map.merge((
 }
 @function _value($size) {
     @if (_is-named($size)) {
-        @return var(#{$cssvar}#{$size});
+        @return var(#{$var}#{$size});
     }
     @else {
         @return $size;
@@ -72,21 +71,21 @@ $sizes: map.merge((
 
 
 
-/* begin: public mixins */
+/* begin: specific style */
 @mixin all($size: default) {
-    border          : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+    border          : _value($size) var(#{$var}style) var(#{$var}color);
 }
 @mixin top($size: default) {
-    border-top      : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+    border-top      : _value($size) var(#{$var}style) var(#{$var}color);
 }
 @mixin bottom($size: default) {
-    border-bottom   : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+    border-bottom   : _value($size) var(#{$var}style) var(#{$var}color);
 }
 @mixin left($size: default) {
-    border-left     : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+    border-left     : _value($size) var(#{$var}style) var(#{$var}color);
 }
 @mixin right($size: default) {
-    border-right    : _value($size) var(#{$cssvar}style) var(#{$cssvar}color);
+    border-right    : _value($size) var(#{$var}style) var(#{$var}color);
 }
 
 @mixin not-top($size: default) {
@@ -113,65 +112,20 @@ $sizes: map.merge((
 @mixin none {
     @include all(none);
 }
-/* end: public mixins */
-
-
-
-/* begin: division class */
-$locations: (all, top, bottom, left, right, not-top, not-bottom, not-left, not-right, none);
-@mixin _style-of($location, $include) {
-    @if (list.index($locations, $location) == null) { @error "#{$location} is not valid."; }
-    
-
-
-    @if      ($location == all)         { @include all; }
-
-    @else if ($location == top)         { @include top; }
-    @else if ($location == bottom)      { @include bottom; }
-    @else if ($location == left)        { @include left; }
-    @else if ($location == right)       { @include right; }
-
-    @else if ($location == not-top)     { @include not-top; }
-    @else if ($location == not-bottom)  { @include not-bottom; }
-    @else if ($location == not-left)    { @include not-left; }
-    @else if ($location == not-right)   { @include not-right; }
-
-    @else if ($location == none)        { @include none; }
-}
-@mixin style-of($location) {
-    @include _style-of($location, true);
-}
-@each $sub in $locations {
-    @include alias-of($alias, $sub) {
-        @include _style-of($sub, false);
-    }
-
-
-    // utility class => no emit class
-    // @include class(part-combine($alias, $sub), "#{$class}-#{$sub}", base.$class);
-}
-/* end: division class */
+/* end: specific style */
 
 
 
 /* begin: general style */
-@mixin _style($include) {
-    @if ($include) { @include base.style; }
-    @else          { @extend #{base.$alias} !optional; }
-
-
-    @if ($include) { @include all; }
-    @else          { @extend #{$alias}-all !optional; }
-}
 @mixin style {
-    @include _style(true);
-}
-@include alias($alias) {
-    @include _style(false);
+    @include base.style;
+
+
+    @include all;
 }
 /* end: general style */
 
 
 
 // utility class => no emit class
-// @include class($alias, $class, base.$class);
+// @include class($class, base.$class) { @include style; }

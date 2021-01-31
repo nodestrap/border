@@ -6,34 +6,28 @@
 
 
 
-$alias              : "%border-base"                        !default;
 $class              : ".bd"                                 !default;
 $var-root           : ":root"                               !default;
 $var-prefix         : "bd"                                  !default;
 $var-prefix-base    : ""                                    !default;
-$cssvar: make-cssvar($var-prefix, $var-prefix-base);
+$var: make-var($var-prefix, $var-prefix-base);
 
 /* define variables here */
 
 
 
-@include declare-cssvar($var-root) {
+@include declare-vars($var-root) {
 }
 
 
 
 /* begin: general style */
-@mixin _style($include) {
-}
 @mixin style {
-    @include _style(true);
-}
-@include alias($alias) {
-    @include _style(false);
+    // @include base.style;
 }
 /* end: general style */
 
 
 
 // abstract class => no emit class
-// @include class($alias, $class, "");
+// @include class($class, base.$class) { @include style; }
